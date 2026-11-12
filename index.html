@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#171B35"><title>DATA CTSV | UFLS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<div class="app-shell">
+<aside class="sidebar">
+  <div class="sidebar-brand"><div class="brand-mark">D</div><div><strong>DATA CTSV</strong><small>UFLS · DATA PORTAL</small></div></div>
+  <div class="nav-label">WORKSPACE</div>
+  <nav id="mainNav">
+    <button class="nav-item active" data-view="overview"><span class="nav-icon">▦</span><span>Tổng quan</span></button>
+    <button class="nav-item" data-category="hoc-bong"><span class="nav-icon">✧</span><span>Học bổng</span><span class="nav-count" id="count-hoc-bong">0</span></button>
+    <button class="nav-item" data-category="tuyen-dung"><span class="nav-icon">↗</span><span>Tuyển dụng</span><span class="nav-count" id="count-tuyen-dung">0</span></button>
+    <button class="nav-item" data-category="doanh-nghiep"><span class="nav-icon">▤</span><span>Doanh nghiệp</span><span class="nav-count" id="count-doanh-nghiep">0</span></button>
+    <div class="nav-label nav-label-spaced">MỞ RỘNG</div>
+    <button class="nav-item" data-view="categories"><span class="nav-icon">＋</span><span>Danh mục khác</span></button>
+  </nav>
+  <div class="sidebar-bottom">
+    <div class="connection online"><i></i><span>Chế độ xem thử · Lưu trên máy này</span></div>
+    <div class="user-mini"><div class="avatar">CT</div><div><strong>Không cần đăng nhập</strong><small>Prototype giao diện</small></div></div>
+    <div class="sidebar-note">Bản DEMO · Chưa đồng bộ nhiều thiết bị</div>
+  </div>
+</aside>
+<main class="main-area">
+<header class="topbar"><div class="breadcrumb"><span>DATA CTSV</span><b>/</b><strong id="breadcrumbCurrent">Tổng quan</strong></div><div class="top-actions"><span class="top-date" id="todayLabel"></span><button class="icon-btn" id="refreshBtn" title="Làm mới">↻</button><div class="avatar">CT</div></div></header>
+<section class="page-content">
+<section id="overviewView" class="view">
+  <div class="page-heading"><div><div class="eyebrow">STUDENT AFFAIRS DATA CENTER</div><h1>Tổng quan dữ liệu</h1><p>Không gian quản lý và khai thác dữ liệu Công tác Sinh viên.</p></div><button class="btn btn-primary" id="quickImportBtn">＋ Import dữ liệu</button></div>
+  <div class="demo-banner"><span class="demo-pulse"></span><div><b>ĐANG Ở CHẾ ĐỘ DEMO</b><small>Chưa cần tài khoản. Dữ liệu Excel được lưu trên trình duyệt hiện tại.</small></div><span class="demo-tag">LOCAL MODE</span></div>
+  <div class="stat-grid">
+    <article class="stat-card"><div class="stat-top"><span>Tổng bản ghi</span><span class="stat-icon navy">▦</span></div><strong id="totalRecords">0</strong><small>Trên toàn hệ thống</small></article>
+    <article class="stat-card"><div class="stat-top"><span>Học bổng</span><span class="stat-icon blue">✧</span></div><strong id="scholarshipCount">0</strong><small>Bản ghi dữ liệu</small></article>
+    <article class="stat-card"><div class="stat-top"><span>Tuyển dụng</span><span class="stat-icon green">↗</span></div><strong id="jobsCount">0</strong><small>Bản ghi dữ liệu</small></article>
+    <article class="stat-card"><div class="stat-top"><span>Doanh nghiệp</span><span class="stat-icon orange">▤</span></div><strong id="businessCount">0</strong><small>Bản ghi dữ liệu</small></article>
+  </div>
+  <div class="dashboard-grid">
+    <article class="panel"><div class="panel-heading"><div><h3>Cơ cấu dữ liệu</h3><p>Phân bổ bản ghi theo danh mục</p></div><span class="panel-tag">OVERVIEW</span></div><div class="chart-wrap"><canvas id="categoryChart"></canvas></div></article>
+    <article class="panel"><div class="panel-heading"><div><h3>Thao tác nhanh</h3><p>Truy cập các chức năng chính</p></div></div>
+      <button class="quick-action" data-category="hoc-bong"><span class="quick-icon blue">✧</span><span><b>Quản lý học bổng</b><small>Tra cứu và cập nhật dữ liệu</small></span><i>→</i></button>
+      <button class="quick-action" data-category="tuyen-dung"><span class="quick-icon green">↗</span><span><b>Quản lý tuyển dụng</b><small>Việc làm và cơ hội nghề nghiệp</small></span><i>→</i></button>
+      <button class="quick-action" data-category="doanh-nghiep"><span class="quick-icon orange">▤</span><span><b>Quản lý doanh nghiệp</b><small>Thông tin đối tác và liên hệ</small></span><i>→</i></button>
+      <button class="quick-action" id="overviewImport"><span class="quick-icon red">＋</span><span><b>Nhập dữ liệu Excel</b><small>Thêm hoặc cập nhật dữ liệu</small></span><i>→</i></button>
+    </article>
+  </div>
+  <article class="panel"><div class="panel-heading"><div><h3>Dữ liệu cập nhật gần đây</h3><p>Các bản ghi mới nhất trên trình duyệt này</p></div></div><div id="recentRecords" class="empty-state compact">Chưa có dữ liệu. Hãy import file Excel đầu tiên.</div></article>
+</section>
+<section id="categoryView" class="view hidden">
+  <div class="page-heading"><div><div class="eyebrow">DATA MANAGEMENT</div><h1 id="categoryTitle">Học bổng</h1><p id="categoryDescription">Quản lý và khai thác dữ liệu.</p></div><button class="btn btn-primary" id="categoryImportBtn">＋ Import Excel</button></div>
+  <div class="category-stats"><div class="mini-stat"><span>Tổng bản ghi</span><b id="categoryTotal">0</b></div><div class="mini-stat"><span>Số trường dữ liệu</span><b id="fieldTotal">0</b></div><div class="mini-stat"><span>File nhập gần nhất</span><b id="lastUpdated">—</b></div></div>
+  <article class="panel data-panel">
+    <div class="toolbar"><div class="search-box"><span>⌕</span><input id="searchInput" placeholder="Tìm kiếm trong dữ liệu..."></div><select id="filterField" class="select-control"><option value="">Lọc theo trường dữ liệu</option></select><input id="filterValue" class="filter-input" placeholder="Giá trị lọc..."><button class="btn btn-outline" id="clearFilters">Xóa lọc</button></div>
+    <div class="table-meta"><span id="resultCount">0 kết quả</span><div class="table-actions"><button class="text-btn" id="exportBtn">↓ Xuất Excel</button><button class="text-btn" id="clearCategoryBtn">⌫ Xóa dữ liệu mục này</button></div></div>
+    <div class="table-scroll"><table id="dataTable"><thead></thead><tbody></tbody></table></div><div id="tableEmpty" class="empty-state hidden">Không có dữ liệu phù hợp.</div>
+    <div class="table-footer"><span id="pageInfo">Hiển thị 0 bản ghi</span><div><button class="btn btn-small btn-outline" id="prevPage">←</button><button class="btn btn-small btn-outline" id="nextPage">→</button></div></div>
+  </article>
+</section>
+<section id="categoriesView" class="view hidden">
+  <div class="page-heading"><div><div class="eyebrow">SYSTEM CONFIGURATION</div><h1>Danh mục mở rộng</h1><p>Tạo thêm nhóm dữ liệu theo nhu cầu vận hành CTSV.</p></div></div>
+  <div class="two-column"><article class="panel create-panel"><h3>Tạo danh mục mới</h3><p class="muted">Danh mục mới tự động có các chức năng import, tìm kiếm, lọc và xuất Excel.</p><form id="categoryForm"><label>Tên danh mục</label><input id="newCategoryName" placeholder="Ví dụ: Hoạt động sinh viên" required maxlength="60"><label>Mô tả</label><input id="newCategoryDesc" placeholder="Mô tả ngắn về dữ liệu"><button class="btn btn-primary full" type="submit">＋ Tạo danh mục</button><div id="categoryFormMessage" class="form-message"></div></form></article>
+  <article class="panel"><div class="panel-heading"><div><h3>Danh mục hiện có</h3><p>Các vùng dữ liệu đang quản lý</p></div></div><div id="categoryList" class="category-list"></div></article></div>
+</section>
+</section><footer class="site-footer"><span>DATA CTSV · UFLS</span><span class="footer-credit">Design by <strong>ZrVietHoang</strong></span></footer></main></div>
+<input type="file" id="excelFile" accept=".xlsx,.xls,.csv" hidden>
+<div id="importModal" class="modal hidden"><div class="modal-backdrop" data-close="true"></div><div class="modal-card">
+  <div class="modal-head"><div><div class="eyebrow">DATA IMPORT</div><h2>Nhập dữ liệu Excel</h2></div><button class="icon-btn" id="closeImport">×</button></div>
+  <div class="import-steps"><span class="step active">01 <small>Tải file</small></span><span class="step-line"></span><span class="step">02 <small>Kiểm tra</small></span><span class="step-line"></span><span class="step">03 <small>Xác nhận</small></span></div>
+  <div class="import-body"><label>Danh mục nhận dữ liệu</label><select id="importCategory" class="select-control full"></select>
+    <div id="dropZone" class="drop-zone"><div class="upload-symbol">↑</div><b>Kéo thả file Excel vào đây</b><span>hoặc chọn file từ máy tính · XLSX, XLS, CSV</span><button class="btn btn-outline" id="chooseFile">Chọn file</button><div id="selectedFile" class="selected-file"></div></div>
+    <div id="importPreview" class="preview-box hidden"></div>
+    <div class="import-mode"><label>Phương thức nhập</label><label class="radio-row"><input type="radio" name="importMode" value="append" checked><span><b>Thêm mới</b><small>Giữ dữ liệu cũ, bổ sung các dòng trong file.</small></span></label><label class="radio-row"><input type="radio" name="importMode" value="upsert"><span><b>Gộp dữ liệu</b><small>Bỏ qua dòng trùng hoàn toàn với dữ liệu đã có.</small></span></label><label class="radio-row"><input type="radio" name="importMode" value="replace"><span><b>Thay thế toàn bộ</b><small>Xóa dữ liệu hiện tại của danh mục rồi nhập file mới.</small></span></label></div><div id="importMessage" class="form-message"></div>
+  </div><div class="modal-footer"><button class="btn btn-outline" id="cancelImport">Hủy</button><button class="btn btn-primary" id="confirmImport" disabled>Kiểm tra dữ liệu</button></div>
+</div></div><div id="toast" class="toast"></div>
+<script src="app.js"></script>
+</body></html>
